@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Todos</title>
+	</head>
+	<body>
+		<h3>Todos</h3>
+		<ul id="list"></ul>
+		<form id="form">
+			<input id="input" required />
+			<button>post</button>
+		</form>
+
+		<script>
+			const form = document.getElementById('form');
+			const input = document.getElementById('input');
+			const list = document.getElementById('list');
+			const baseApiUrl = 'http://localhost:3000';
+			const todos = [];
+
+			function renderList() {
+				list.innerHTML = '';
+
+				todos.forEach(function (todo, index) {
+					const li = document.createElement('li');
+					li.innerHTML = todo;
+					li.addEventListener('click', function () {
+						fetch(`${baseApiUrl}/todos/${index}`, {
+							method: 'DELETE',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+						})
+						.then(function () {
+							todos.splice(index, 1);
+							renderList();
+						})
+						.catch(function (error) {
+							alert('Something went wrong.', error);
+						});
+					});
+
+					list.append(li);
+				});
+			}
+
+			form.onsubmit = function(event) {
+				event.preventDefault();
+
+				const todo = input.value;
+				input.value = '';
+
+				fetch(`${baseApiUrl}/todos`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({todo})
+				})
+				.then(function () {
+					todos.push(todo);
+
+					renderList();
+				})
+				.catch(function (error) {
+					alert('Something went wrong.', error);
+				});
+			}
+
+			fetch(`${baseApiUrl}/todos`)
+				.then(function (response) {
+					return response.json();
+				})
+				.then(function (fetchedTodos) {
+					fetchedTodos.forEach(function (todo) {
+						todos.push(todo);
+					});
+
+					renderList();
+				})
+				.catch(function (error) {
+					alert('Something went wrong.', error);
+				});
+		</script>
+	</body>
+</html>
