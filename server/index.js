@@ -1,12 +1,14 @@
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const app = express();
 const port = 3000;
 const rawData = fs.readFileSync('data.json');
 const todos = JSON.parse(rawData);
 
 app.use(bodyParser.json());
+app.use(cors());
 
 app.get('/todos', (req, res) => {
 	res.send(todos);
