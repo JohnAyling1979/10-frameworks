@@ -16,7 +16,7 @@
 			const input = document.getElementById('input');
 			const list = document.getElementById('list');
 			const baseApiUrl = 'http://localhost:3000';
-			const todos = [];
+			let todos = [];
 
 			function renderList() {
 				list.innerHTML = '';
@@ -31,8 +31,12 @@
 								'Content-Type': 'application/json'
 							},
 						})
-						.then(function () {
-							todos.splice(index, 1);
+						.then(function (response) {
+							return response.json();
+						})
+						.then(function (newTodos) {
+							todos = newTodos;
+
 							renderList();
 						})
 						.catch(function (error) {
@@ -57,8 +61,11 @@
 					},
 					body: JSON.stringify({todo})
 				})
-				.then(function () {
-					todos.push(todo);
+				.then(function (response) {
+							return response.json();
+						})
+				.then(function (newTodos) {
+					todos = newTodos;
 
 					renderList();
 				})

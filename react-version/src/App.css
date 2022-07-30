@@ -1,0 +1,12 @@
+.container {
+	max-width: 1000px;
+	margin: auto;
+	text-align: center;
+}
+
+.error {
+	background-color: salmon;
+	margin-top: 8px;
+	padding: 8px;
+	color:white
+}
